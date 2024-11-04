@@ -1,44 +1,44 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 let App = () => {
-  const [start, setStart] = useState(null);
-  const [now, setNow] = useState(null);
   const [started, setStarted] = useState(false);
   const [stopped, setStopped] = useState(true);
-  const intervalRef = useRef(0);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    let intervalId = null;
+    if(started === true && stopped === false) {
+      intervalId = setInterval(() => {
+        setTime(time + 1);
+      }, 10);
+    } else {
+      clearInterval(intervalId);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    }
+  }, [started, stopped, time]);
 
   let handleStartClick = () => {
-    if(started === true && stopped === false) return;
-    // if(stopped === true);
-    setStart(Date.now());
-    setNow(Date.now());
     setStarted(true);
     setStopped(false);
-
-    clearInterval(intervalRef.current);
-    const intervalId = setInterval(() => {
-      setNow(Date.now());
-    }, 10);
-    intervalRef.current = intervalId;
   }
 
   let handleStopClick = () => {
     setStopped(true);
-
-    const intervalId = intervalRef.current;
-    clearInterval(intervalId);
   }
   
   let minutes = '00';
   let seconds = '00';
   let centiSeconds = '00';
   
-  if(start != null && now != null) {
-    seconds = Math.floor((now - start) / 1000) % 60 > 9 ? '' + Math.floor((now - start) / 1000) % 60 : '0' +  Math.floor((now - start) / 1000) % 60;
-    minutes = Math.floor((now - start) / 1000 / 60) % 60 > 9 ? '' + Math.floor((now - start) / 1000 / 60) % 60 : '0' + Math.floor((now - start) / 1000 / 60) % 60;
-    centiSeconds = Math.floor((now - start) / 10) % 100 > 9 ? '' + Math.floor((now - start) / 10) % 100 : '0' + Math.floor((now - start) / 10) % 100;
+  if(started === true) {
+    seconds = Math.floor((time) / 100) % 60 > 9 ? '' + Math.floor((time) / 100) % 60 : '0' +  Math.floor((time) / 100) % 60;
+    minutes = Math.floor((time) / 100 / 60) % 60 > 9 ? '' + Math.floor((time) / 100 / 60) % 60 : '0' + Math.floor((time) / 100 / 60) % 60;
+    centiSeconds = time % 100 > 9 ? '' + time % 100 : '0' + time % 100;
   }
 
   return (
