@@ -30,6 +30,12 @@ let App = () => {
   let handleStopClick = () => {
     setStopped(true);
   }
+
+  let handleResetClick = () => {
+    setStopped(true);
+    setStarted(false);
+    setTime(0);
+  }
   
   let minutes = '00';
   let seconds = '00';
@@ -60,7 +66,7 @@ let App = () => {
           <p>{minutes}:{seconds}.{centiSeconds}</p>
           <button onClick={handleStartClick}>Start</button>
           <button onClick={handleStopClick}>Stop</button>
-          <button>Reset</button>
+          <button onClick={handleResetClick}>Reset</button>
         </div>
       </header>
     </div>
